@@ -53,7 +53,7 @@ to go
     set label energy
     eat-grass
     death
-    reproduce-antelopes
+    ;reproduce-antelopes
 
   ]
 
@@ -62,8 +62,8 @@ to go
     set energy energy - 1
     set label energy
     eat-antelope
-    death
-    reproduce-cheetahs
+    ;death
+    ;reproduce-cheetahs
   ]
 
 
