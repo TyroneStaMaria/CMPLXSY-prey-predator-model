@@ -9,29 +9,29 @@ patches-own [
 
 to setup
   clear-all
-
+  reset-ticks
   ask patches [
     set pcolor green
     ifelse pcolor = green [ set countdown 10 ] [set countdown random 10]
   ]
 
 
-  create-antelopes 2
+  create-antelopes number_of_antelopes
   [
     set shape "bug"
     set color blue
-    set energy random (2 * 10)
-    set size 3
+    set energy energy_of_antelope
+    set size 2
     set label energy
     ;set energy 1
     setxy random-xcor random-ycor
   ]
 
-  create-cheetahs 1
+  create-cheetahs number_of_cheetahs
   [
     set color red
-    set energy random (10 * 15)
-    set size 5
+    set energy energy_of_cheetah
+    set size 3
     setxy random-xcor random-ycor
     set label energy
   ]
@@ -39,13 +39,14 @@ to setup
 end
 
 to go
-  if not any? patches [stop]
-  if not any? antelopes [stop]
+  ;if not any? patches [stop]
+  ;if not any? antelopes [stop]
+  ;if not any? cheetahs [stop]
+  if ticks = 500 [stop]
 
   ask patches [
     grow-grass
   ]
-
 
   ask antelopes[
     move
@@ -53,7 +54,7 @@ to go
     set label energy
     eat-grass
     death
-    ;reproduce-antelopes
+    reproduce-antelopes
 
   ]
 
@@ -62,11 +63,11 @@ to go
     set energy energy - 1
     set label energy
     eat-antelope
-    ;death
-    ;reproduce-cheetahs
+    death
+    reproduce-cheetahs
   ]
 
-
+  tick
 end
 
 to move
@@ -99,14 +100,14 @@ end
 to eat-antelope
   let prey one-of antelopes-here
   if prey != nobody[
+    set energy energy + [energy] of prey / 2
     ask prey [ die ]
-    set energy energy + 10
     set label energy
   ]
 end
 
 to reproduce-cheetahs
-  if random-float 100 < 40.0
+  if random-float 100 < 5 and energy > 250
    [
       set energy (energy / 2)
       hatch 1 [rt random-float 360 fd 1]
@@ -116,7 +117,7 @@ end
 
 
 to reproduce-antelopes
-  if random-float 100 < 20.0
+  if random-float 100 < 2 and energy > 50
    [
       set energy (energy / 2)
       hatch 1 [rt random-float 360 fd 1]
@@ -136,10 +137,10 @@ to-report coin-flip?
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-647
-448
+365
+11
+802
+449
 -1
 -1
 13.0
@@ -163,10 +164,10 @@ ticks
 30.0
 
 BUTTON
-109
-67
-172
-100
+217
+134
+295
+167
 NIL
 setup
 NIL
@@ -180,10 +181,10 @@ NIL
 1
 
 BUTTON
-108
-114
-171
-147
+295
+134
+365
+167
 NIL
 go
 T
@@ -195,6 +196,69 @@ NIL
 NIL
 NIL
 1
+
+INPUTBOX
+217
+11
+365
+71
+energy_of_antelope
+80.0
+1
+0
+Number
+
+INPUTBOX
+217
+73
+365
+133
+energy_of_cheetah
+200.0
+1
+0
+Number
+
+INPUTBOX
+0
+11
+217
+71
+number_of_antelopes
+100.0
+1
+0
+Number
+
+INPUTBOX
+0
+73
+217
+133
+number_of_cheetahs
+100.0
+1
+0
+Number
+
+PLOT
+166
+167
+366
+317
+Population
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"cheetahs" 1.0 0 -16777216 true "" "plot count cheetahs"
+"antelopes" 1.0 0 -7500403 true "" "plot count antelopes"
 
 @#$#@#$#@
 ## WHAT IS IT?
