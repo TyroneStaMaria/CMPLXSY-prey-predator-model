@@ -11,8 +11,12 @@ to setup
   clear-all
   reset-ticks
   ask patches [
-    set pcolor green
-    ifelse pcolor = green [ set countdown 10 ] [set countdown random 10]
+    set pcolor one-of [ green black ]
+    ifelse pcolor = green
+        [ set countdown 100 ]
+      [ set countdown random 100 ]
+    ;set pcolor green
+    ;ifelse pcolor = green [ set countdown 10 ] [set countdown random 10]
   ]
 
 
@@ -21,7 +25,7 @@ to setup
     set shape "bug"
     set color blue
     set energy energy_of_antelope
-    set size 2
+    set size 1.5
     set label energy
     ;set energy 1
     setxy random-xcor random-ycor
@@ -31,7 +35,7 @@ to setup
   [
     set color red
     set energy energy_of_cheetah
-    set size 3
+    set size 2
     setxy random-xcor random-ycor
     set label energy
   ]
@@ -78,7 +82,7 @@ end
 to eat-grass
   if pcolor = green [
     set pcolor black
-    set energy energy + 5
+    set energy energy + 20
     set label energy
   ]
 end
@@ -90,7 +94,7 @@ to grow-grass
     ifelse countdown <= 0
       [
         set pcolor green
-        set countdown 10 ]
+        set countdown random 100 ]
     [set countdown countdown - 1]
   ]
 
@@ -106,7 +110,7 @@ to eat-antelope
 end
 
 to reproduce-cheetahs
-  if random-float 100 < 5 and energy > 250
+  if random 100 < cheetah-reproductive-rate
    [
       set energy (energy / 2)
       hatch 1 [rt random-float 360 fd 1]
@@ -116,7 +120,7 @@ end
 
 
 to reproduce-antelopes
-  if random-float 100 < 2 and energy > 200
+  if random 100 < antelope-reproductive-rate
    [
       set energy (energy / 2)
       hatch 1 [rt random-float 360 fd 1]
@@ -129,17 +133,19 @@ to death
   if energy < 0 [ die ]
 end
 
-
+to-report grass-count
+  report patches with [pcolor = green]
+end
 
 to-report coin-flip?
   report random 2 = 0
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-365
-11
-802
-449
+414
+10
+851
+448
 -1
 -1
 13.0
@@ -202,7 +208,7 @@ INPUTBOX
 365
 71
 energy_of_antelope
-80.0
+20.0
 1
 0
 Number
@@ -213,7 +219,7 @@ INPUTBOX
 365
 133
 energy_of_cheetah
-200.0
+20.0
 1
 0
 Number
@@ -241,10 +247,10 @@ number_of_cheetahs
 Number
 
 PLOT
-88
-369
-288
-519
+895
+84
+1417
+398
 Population
 NIL
 NIL
@@ -256,8 +262,72 @@ true
 false
 "" ""
 PENS
-"cheetahs" 1.0 0 -16777216 true "" "plot count cheetahs"
-"antelopes" 1.0 0 -7500403 true "" "plot count antelopes"
+"cheetahs" 1.0 0 -2674135 true "" "plot count cheetahs"
+"antelopes" 1.0 0 -13345367 true "" "plot count antelopes"
+"grass" 1.0 0 -11085214 true "" "plot count grass-count / 4"
+
+SLIDER
+163
+174
+364
+207
+cheetah-reproductive-rate
+cheetah-reproductive-rate
+0
+10
+1.0
+1
+1
+%
+HORIZONTAL
+
+SLIDER
+164
+214
+361
+247
+antelope-reproductive-rate
+antelope-reproductive-rate
+0
+10
+10.0
+1
+1
+%
+HORIZONTAL
+
+MONITOR
+9
+299
+73
+344
+cheetahs
+count cheetahs
+0
+1
+11
+
+MONITOR
+78
+300
+144
+345
+antelopes
+count antelopes
+0
+1
+11
+
+MONITOR
+156
+302
+213
+347
+grass
+count grass-count / 4
+0
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
